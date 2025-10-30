@@ -28,7 +28,19 @@ export const createChatCompletions = async (
     "X-Initiator": isAgentCall ? "agent" : "user",
   }
 
-  const response = await fetch(`${copilotBaseUrl(state)}/chat/completions`, {
+  const requestUrl = `${copilotBaseUrl(state)}/chat/completions`
+
+  const headerLines = Object.entries(headers)
+    .map(([key, value]) => `${key}: ${value}`)
+    .join("\n")
+
+  consola.info(
+    `Request: POST ${requestUrl}`
+      + `\nHeaders:\n${headerLines}`
+      + `\n\nBody:\n${JSON.stringify(payload, null, 2)}`,
+  )
+
+  const response = await fetch(requestUrl, {
     method: "POST",
     headers,
     body: JSON.stringify(payload),
